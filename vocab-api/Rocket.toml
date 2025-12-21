@@ -1,0 +1,2 @@
+[default.databases.vocabs]
+url = "../data/database.db"
