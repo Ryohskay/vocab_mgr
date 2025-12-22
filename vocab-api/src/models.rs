@@ -1,6 +1,6 @@
 use rocket::serde::{Serialize, Deserialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(sqlx::FromRow, Debug, Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct VocabularyEntry {
     pub word_id: Option<i64>,

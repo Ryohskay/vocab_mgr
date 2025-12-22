@@ -2,6 +2,7 @@ use rocket::serde::json::Json;
 use rocket::{get, post, put, delete};
 use rocket_db_pools::{Connection, sqlx};
 
+use rocket::serde::json;
 use crate::models::VocabularyEntry;
 use crate::db::Vocabs;
 
@@ -10,7 +11,7 @@ pub async fn list(
     mut db: Connection<Vocabs>,
     language_id: i64,
 ) -> Json<Vec<VocabularyEntry>> {
-    let rows = sqlx::query_as(
+    let rows = sqlx::query_as::<_, VocabularyEntry>(
         r#"
         SELECT
             word_id as "word_id?",
@@ -36,42 +37,66 @@ pub async fn list(
     Json(rows)
 }
 
-#[post("/vocabulary", data = "<entry>")]
+#[post("/languages/<language_id>/vocabulary", format = "json", data = "<entry>")]
 pub async fn create(
-    mut db: DbConn,
+    mut db: Connection<Vocabs>,
+    language_id: i64,
     entry: Json<VocabularyEntry>,
-) {
-    sqlx::query!(
+) -> Json<VocabularyEntry> {
+    let result = sqlx::query_as::<_, VocabularyEntry>(
         r#"
-        INSERT INTO vocabulary
-        (language_id, part_of_speech, lemma, transliteration,
-         origin_lang, process, etymology_notes, tag, notes)
+        INSERT INTO vocabulary (
+            language_id,
+            part_of_speech,
+            lemma,
+            transliteration,
+            origin_lang,
+            process,
+            etymology_notes,
+            tag,
+            notes
+        )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        "#,
-        entry.language_id,
-        entry.part_of_speech,
-        entry.lemma,
-        entry.transliteration,
-        entry.origin_lang,
-        entry.process,
-        entry.etymology_notes,
-        entry.tag,
-        entry.notes
+        RETURNING
+            word_id as "word_id?",
+            language_id,
+            part_of_speech,
+            lemma,
+            transliteration,
+            origin_lang,
+            process,
+            etymology_notes,
+            tag,
+            notes
+        "#
     )
-    .execute(&mut *db)
+    .bind(language_id)
+    .bind(&entry.part_of_speech)
+    .bind(&entry.lemma)
+    .bind(&entry.transliteration)
+    .bind(&entry.origin_lang)
+    .bind(&entry.process)
+    .bind(&entry.etymology_notes)
+    .bind(&entry.tag)
+    .bind(&entry.notes)
+    .fetch_one(&mut **db)
     .await
-    .expect("Insert failed");
+    .expect("DB error");
+
+    Json(result)
 }
 
-#[put("/vocabulary/<id>", data = "<entry>")]
+#[put("/languages/<language_id>/vocabulary/<word_id>", format = "json", data = "<entry>")]
 pub async fn update(
-    mut db: DbConn,
-    id: i64,
+    mut db: Connection<Vocabs>,
+    language_id: i64,
+    word_id: i64,
     entry: Json<VocabularyEntry>,
-) {
-    sqlx::query!(
+) -> Json<VocabularyEntry> {
+    let result = sqlx::query_as::<_, VocabularyEntry>(
         r#"
-        UPDATE vocabulary SET
+        UPDATE vocabulary
+        SET
             part_of_speech = ?,
             lemma = ?,
             transliteration = ?,
@@ -80,30 +105,54 @@ pub async fn update(
             etymology_notes = ?,
             tag = ?,
             notes = ?
-        WHERE word_id = ?
-        "#,
-        entry.part_of_speech,
-        entry.lemma,
-        entry.transliteration,
-        entry.origin_lang,
-        entry.process,
-        entry.etymology_notes,
-        entry.tag,
-        entry.notes,
-        id
+        WHERE word_id = ? AND language_id = ?
+        RETURNING
+            word_id as "word_id?",
+            language_id,
+            part_of_speech,
+            lemma,
+            transliteration,
+            origin_lang,
+            process,
+            etymology_notes,
+            tag,
+            notes
+        "#
     )
-    .execute(&mut *db)
+    .bind(&entry.part_of_speech)
+    .bind(&entry.lemma)
+    .bind(&entry.transliteration)
+    .bind(&entry.origin_lang)
+    .bind(&entry.process)
+    .bind(&entry.etymology_notes)
+    .bind(&entry.tag)
+    .bind(&entry.notes)
+    .bind(word_id)
+    .bind(language_id)
+    .fetch_one(&mut **db)
     .await
-    .expect("Update failed");
+    .expect("DB error");
+
+    Json(result)
 }
 
-#[delete("/vocabulary/<id>")]
-pub async fn delete_word(mut db: DbConn, id: i64) {
-    sqlx::query!(
-        "DELETE FROM vocabulary WHERE word_id = ?",
-        id
+#[delete("/languages/<language_id>/vocabulary/<word_id>")]
+pub async fn delete(
+    mut db: Connection<Vocabs>,
+    language_id: i64,
+    word_id: i64,
+) -> Json<json::Value> {
+    sqlx::query(
+        r#"
+        DELETE FROM vocabulary
+        WHERE word_id = ? AND language_id = ?
+        "#
     )
-    .execute(&mut *db)
+    .bind(word_id)
+    .bind(language_id)
+    .execute(&mut **db)
     .await
-    .expect("Delete failed");
+    .expect("DB error");
+
+    Json(serde_json::json!({"success": true}))
 }

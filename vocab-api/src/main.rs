@@ -16,6 +16,6 @@ fn rocket() -> _ {
             list,
             create,
             update,
-            delete_word
+            delete
         ])
 }
