@@ -1,10 +1,7 @@
 #[macro_use] extern crate rocket;
 
 use rocket_db_pools::Database;
-
-mod db;
-mod models;
-mod routes;
+use vocab_api::{db, routes};
 
 use routes::vocabulary::*;
 
