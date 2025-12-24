@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import LanguageManager from "./components/LanguageManager";
 import VocabularyManager from "./components/VocabularyManager";
 import api from "./api";
