@@ -8,6 +8,7 @@ pub struct VocabularyEntry {
     pub part_of_speech: String,
     pub lemma: String,
     pub transliteration: Option<String>,
+    pub definition: Option<String>,
     pub origin_lang: Option<String>,
     pub process: Option<String>,
     pub etymology_notes: Option<String>,

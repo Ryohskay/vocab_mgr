@@ -19,6 +19,7 @@ pub async fn list(
             part_of_speech,
             lemma,
             transliteration,
+            definition,
             origin_lang,
             process,
             etymology_notes,
@@ -50,19 +51,21 @@ pub async fn create(
             part_of_speech,
             lemma,
             transliteration,
+            definition,
             origin_lang,
             process,
             etymology_notes,
             tag,
             notes
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING
             word_id as "word_id?",
             language_id,
             part_of_speech,
             lemma,
             transliteration,
+            definition,
             origin_lang,
             process,
             etymology_notes,
@@ -74,6 +77,7 @@ pub async fn create(
     .bind(&entry.part_of_speech)
     .bind(&entry.lemma)
     .bind(&entry.transliteration)
+    .bind(&entry.definition)
     .bind(&entry.origin_lang)
     .bind(&entry.process)
     .bind(&entry.etymology_notes)
@@ -100,6 +104,7 @@ pub async fn update(
             part_of_speech = ?,
             lemma = ?,
             transliteration = ?,
+            definition = ?,
             origin_lang = ?,
             process = ?,
             etymology_notes = ?,
@@ -112,6 +117,7 @@ pub async fn update(
             part_of_speech,
             lemma,
             transliteration,
+            definition,
             origin_lang,
             process,
             etymology_notes,
@@ -122,6 +128,7 @@ pub async fn update(
     .bind(&entry.part_of_speech)
     .bind(&entry.lemma)
     .bind(&entry.transliteration)
+    .bind(&entry.definition)
     .bind(&entry.origin_lang)
     .bind(&entry.process)
     .bind(&entry.etymology_notes)
