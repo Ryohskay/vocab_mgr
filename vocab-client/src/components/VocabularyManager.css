@@ -184,8 +184,8 @@ textarea {
 }
 
 .trans,
-.origin {
-    color: #666;
+.origin,
+.definition {
     font-size: 0.9em;
 }
 

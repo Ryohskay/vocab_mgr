@@ -13,6 +13,7 @@ const VocabularyManager = ({ language }) => {
         part_of_speech: "",
         lemma: "",
         transliteration: "",
+        definition: "",
         origin_lang: "",
         process: "",
         etymology_notes: "",
@@ -80,6 +81,7 @@ const VocabularyManager = ({ language }) => {
                 part_of_speech: "",
                 lemma: "",
                 transliteration: "",
+                definition: "",
                 origin_lang: "",
                 process: "",
                 etymology_notes: "",
@@ -108,6 +110,7 @@ const VocabularyManager = ({ language }) => {
             part_of_speech: "",
             lemma: "",
             transliteration: "",
+            definition: "",
             origin_lang: "",
             process: "",
             etymology_notes: "",
@@ -201,6 +204,16 @@ const VocabularyManager = ({ language }) => {
 
                     <div className="form-row full">
                         <textarea
+                            name="definition"
+                            placeholder="Definition"
+                            value={formData.definition}
+                            onChange={handleChange}
+                            rows="3"
+                        />
+                    </div>
+
+                    <div className="form-row full">
+                        <textarea
                             name="etymology_notes"
                             placeholder="Etymology notes"
                             value={formData.etymology_notes}
@@ -275,6 +288,11 @@ const VocabularyManager = ({ language }) => {
                                         <p className="trans">
                                             Transliteration:{" "}
                                             {entry.transliteration}
+                                        </p>
+                                    )}
+                                    {entry.definition && (
+                                        <p className="definition">
+                                            Definition: {entry.definition}
                                         </p>
                                     )}
                                     {entry.origin_lang && (
