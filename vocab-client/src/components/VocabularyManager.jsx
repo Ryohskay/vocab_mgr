@@ -150,14 +150,39 @@ const VocabularyManager = ({ language }) => {
                 <h3>{editingId ? "Edit Entry" : "Add New Vocabulary Entry"}</h3>
                 <form onSubmit={handleSubmit}>
                     <div className="form-row">
-                        <input
-                            type="text"
+                        <select
                             name="part_of_speech"
-                            placeholder="Part of speech (required)"
                             value={formData.part_of_speech}
                             onChange={handleChange}
                             required
-                        />
+                        >
+                            <option value="">Select part of speech</option>
+                            <option value="noun">Noun</option>
+                            <option value="propn.">Proper Noun</option>
+                            <option value="v. intra.">Intransitive Verb</option>
+                            <option value="v. trans.">Transitive Verb</option>
+                            <option value="v. root">Verb root</option>
+                            <option value="v. aux.">Auxiliary Verb</option>
+                            <option value="adj.">Adjective</option>
+                            <option value="pron.">Pronoun</option>
+                            <option value="preposition">Preposition</option>
+                            <option value="postposition">Postposition</option>
+                            <option value="particle">Particle</option>
+                            <option value="conjunction">Conjunction</option>
+                            <option value="interjection">Interjection</option>
+                            <option value="determiner">Determiner</option>
+                            <option value="adverb">Adverb</option>
+                            <option value="numeral">Numeral</option>
+                            <option value="classifier">Classifier</option>
+                            <option value="prefix">Prefix</option>
+                            <option value="suffix">Suffix</option>
+                            <option value="infix">Infix</option>
+                            <option value="circumfix">Circumfix</option>
+                            <option value="idiom">Idiom</option>
+                            <option value="coverb">Coverb</option>
+                            <option value="preverb">Preverb</option>
+                            <option value="other">Other</option>
+                        </select>
                         <input
                             type="text"
                             name="lemma"
