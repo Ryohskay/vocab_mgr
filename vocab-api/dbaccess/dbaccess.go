@@ -10,16 +10,17 @@ import (
 
 type Language struct {
 	gorm.Model
-	iso string
-	script string
-	endonym string
-	exonym_en string
-	stage *string
-	language_family *string
-	area_used string
+	ISO string
+	Script string
+	Endonym string
+	Exonym_en string
+	Stage *string
+	Language_family *string
+	Area_used string
 }
 
 func GetLangs() {
+	fmt.Println("GetLangs called")
 	db, err := gorm.Open(sqlite.Open("../data/database.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalln("Failed to connect!", err)
@@ -27,14 +28,11 @@ func GetLangs() {
 	ctx := context.Background()
 
 	db.AutoMigrate(&Language{})
-
-	lang := Language{iso: "xba", script: "Bhks", endonym: "Mattam bhasa", exonym_en: "Martabanese", area_used: "Southeast Asia"}
-
-	err = gorm.G[Language](db).Create(ctx, &lang)
+	// err = gorm.G[Language](db).Create(ctx, &Language{ISO: "xba", Script: "Bhks", Endonym: "Mattam bhasa", Exonym_en: "Martabanese", Area_used: "Southeast Asia"})
 
 	langs, err := gorm.G[Language](db).Find(ctx)
+	fmt.Println(len(langs))
 	for _, lang := range langs {
-		fmt.Println(lang.iso, lang.endonym, lang.exonym_en)
+		fmt.Println(fmt.Sprintf("%d: %s %s", lang.ID, lang.ISO, lang.Endonym))
 	}
-
 }
