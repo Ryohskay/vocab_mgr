@@ -14,7 +14,7 @@ pub async fn list(
     let rows = sqlx::query_as::<_, VocabularyEntry>(
         r#"
         SELECT
-            word_id as "word_id?",
+            word_id,
             language_id,
             part_of_speech,
             lemma,
@@ -60,7 +60,7 @@ pub async fn create(
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         RETURNING
-            word_id as "word_id?",
+            word_id,
             language_id,
             part_of_speech,
             lemma,
@@ -112,7 +112,7 @@ pub async fn update(
             notes = ?
         WHERE word_id = ? AND language_id = ?
         RETURNING
-            word_id as "word_id?",
+            word_id,
             language_id,
             part_of_speech,
             lemma,
