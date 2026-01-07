@@ -2,7 +2,6 @@ package dbaccess
 
 import (
 	"log"
-	"fmt"
 	"context"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -19,8 +18,7 @@ type Language struct {
 	Area_used string
 }
 
-func GetLangs() {
-	fmt.Println("GetLangs called")
+func GetLangs() ([]Language, error) {
 	db, err := gorm.Open(sqlite.Open("../data/database.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalln("Failed to connect!", err)
@@ -31,8 +29,5 @@ func GetLangs() {
 	// err = gorm.G[Language](db).Create(ctx, &Language{ISO: "xba", Script: "Bhks", Endonym: "Mattam bhasa", Exonym_en: "Martabanese", Area_used: "Southeast Asia"})
 
 	langs, err := gorm.G[Language](db).Find(ctx)
-	fmt.Println(len(langs))
-	for _, lang := range langs {
-		fmt.Println(fmt.Sprintf("%d: %s %s", lang.ID, lang.ISO, lang.Endonym))
-	}
+	return langs, err
 }
