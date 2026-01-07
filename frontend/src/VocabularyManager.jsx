@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { api } from './api';
 
+const PART_OF_SPEECH_OPTIONS = [
+    'noun', 'pronoun', 'adjective', 'verb', 'auxiliary verb', 'adverb',
+    'conjunction', 'determiner', 'prefix', 'suffix', 'circumfix',
+    'particle', 'preposition', 'postposition', 'classifier', 'enclitics'
+];
+
+
 function VocabularyManager() {
     const [vocabulary, setVocabulary] = useState([]);
     const [languages, setLanguages] = useState([]);
@@ -104,7 +111,16 @@ function VocabularyManager() {
                     </div>
                     <div className="form-group">
                         <label>Part of Speech</label>
-                        <input value={form.part_of_speech} onChange={e => setForm({ ...form, part_of_speech: e.target.value })} required />
+                        <select
+                            value={form.part_of_speech}
+                            onChange={e => setForm({ ...form, part_of_speech: e.target.value })}
+                            required
+                        >
+                            <option value="">Select PoS</option>
+                            {PART_OF_SPEECH_OPTIONS.map(pos => (
+                                <option key={pos} value={pos}>{pos}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>Transliteration</label>

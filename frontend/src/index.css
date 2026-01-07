@@ -130,6 +130,11 @@ textarea {
   margin-bottom: 1rem;
 }
 
+select option {
+  color: #1e293b;
+  background-color: #ffffff;
+}
+
 input:focus {
   outline: 2px solid var(--primary);
   border-color: transparent;
