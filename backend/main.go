@@ -122,16 +122,21 @@ func deleteLanguage(db *sql.DB) gin.HandlerFunc {
 func getVocabulary(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		lang := c.Query("language")
-		query := "SELECT word_id, lemma, language, part_of_speech, transliteration, definition, synonyms, tags, etymology_notes, origin_language, notes FROM vocabulary"
-		var rows *sql.Rows
-		var err error
+		search := c.Query("search")
+		query := "SELECT word_id, lemma, language, part_of_speech, transliteration, definition, synonyms, tags, etymology_notes, origin_language, notes FROM vocabulary WHERE 1=1"
+		var args []interface{}
+
 		if lang != "" {
-			query += " WHERE language = ?"
-			rows, err = db.Query(query, lang)
-		} else {
-			rows, err = db.Query(query)
+			query += " AND language = ?"
+			args = append(args, lang)
+		}
+		if search != "" {
+			query += " AND (lemma LIKE ? OR transliteration LIKE ? OR definition LIKE ? OR origin_language LIKE ? OR tags LIKE ?)"
+			term := "%" + search + "%"
+			args = append(args, term, term, term, term, term)
 		}
 
+		rows, err := db.Query(query, args...)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

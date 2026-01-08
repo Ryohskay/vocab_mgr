@@ -18,7 +18,7 @@ export const api = {
         }).then(res => res.json()),
     },
     vocabulary: {
-        list: (lang = '') => fetch(`${API_BASE_URL}/vocabulary?language=${lang}`).then(res => res.json()),
+        list: (lang = '', search = '') => fetch(`${API_BASE_URL}/vocabulary?language=${lang}&search=${search}`).then(res => res.json()),
         create: (data) => fetch(`${API_BASE_URL}/vocabulary`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

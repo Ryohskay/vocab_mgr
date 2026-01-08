@@ -57,27 +57,27 @@ function LanguageManager() {
             <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div className="form-group">
-                        <label>ISO 639-3 Code</label>
+                        <label>ISO 639-3 Code <span className="required">*</span></label>
                         <input value={form.code} onChange={e => setForm({ ...form, code: e.target.value })} disabled={editing} required />
                     </div>
                     <div className="form-group">
-                        <label>ISO 15924 Script</label>
+                        <label>ISO 15924 Script <span className="required">*</span></label>
                         <input value={form.script} onChange={e => setForm({ ...form, script: e.target.value })} required />
                     </div>
                     <div className="form-group">
-                        <label>Endonym</label>
+                        <label>Endonym <span className="required">*</span></label>
                         <input value={form.endonym} onChange={e => setForm({ ...form, endonym: e.target.value })} required />
                     </div>
                     <div className="form-group">
-                        <label>Exonym (EN)</label>
+                        <label>Exonym (EN) <span className="required">*</span></label>
                         <input value={form.exonym_en} onChange={e => setForm({ ...form, exonym_en: e.target.value })} required />
                     </div>
                     <div className="form-group">
-                        <label>Language Family</label>
+                        <label>Language Family <span className="optional">(optional)</span></label>
                         <input value={form.language_family} onChange={e => setForm({ ...form, language_family: e.target.value })} />
                     </div>
                     <div className="form-group">
-                        <label>Area Spoken</label>
+                        <label>Area Spoken <span className="optional">(optional)</span></label>
                         <input value={form.area_spoken} onChange={e => setForm({ ...form, area_spoken: e.target.value })} />
                     </div>
                 </div>
@@ -88,24 +88,28 @@ function LanguageManager() {
             <table>
                 <thead>
                     <tr>
+                        <th>Actions</th>
                         <th>Code</th>
                         <th>Name</th>
                         <th>Script</th>
                         <th>Family</th>
-                        <th>Actions</th>
+                        <th>Area Spoken</th>
                     </tr>
                 </thead>
                 <tbody>
                     {languages.map(l => (
                         <tr key={l.code}>
+                            <td>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <button onClick={() => handleEdit(l)} className="btn-small">Edit</button>
+                                    <button onClick={() => handleDelete(l.code)} className="btn-small btn-danger">Delete</button>
+                                </div>
+                            </td>
                             <td>{l.code}</td>
                             <td>{l.exonym_en} ({l.endonym})</td>
                             <td>{l.script}</td>
                             <td>{l.language_family}</td>
-                            <td>
-                                <button onClick={() => handleEdit(l)} style={{ padding: '0.25rem 0.5rem', marginRight: '0.5rem' }}>Edit</button>
-                                <button onClick={() => handleDelete(l.code)} style={{ padding: '0.25rem 0.5rem', background: '#ef4444', color: 'white' }}>Delete</button>
-                            </td>
+                            <td>{l.area_spoken}</td>
                         </tr>
                     ))}
                 </tbody>
