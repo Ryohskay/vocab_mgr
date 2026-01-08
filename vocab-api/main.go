@@ -10,6 +10,6 @@ func main() {
 	db, ctx := dbaccess.DbConnInit()
 	router.GET("api/languages", ListLangs(db, ctx))
 	// define path param `lang_id` (accessible via c.Param())
-	router.GET("api/:lang_id/vocabulary", ListVocabs())
+	router.GET("api/:lang_id/vocabulary", ListVocabs(db, ctx))
 	router.Run()
 }

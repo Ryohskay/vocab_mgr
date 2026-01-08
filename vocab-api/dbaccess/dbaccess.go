@@ -18,6 +18,21 @@ type Language struct {
 	Area_used string
 }
 
+// Vocabulary belongs to Language
+type Vocabulary struct {
+	gorm.Model
+	LangID uint
+	PartOfSpeech string
+	Lemma string
+	Definition string
+	Transliteration *string
+	OriginLang *string
+	EtymologyNotes *string
+	Tag *string
+	Notes *string
+	Language Language `gorm:"foreignKey:LangID"`
+}
+
 func DbConnInit() (*gorm.DB, context.Context) {
 	// initialise the DB connection
 	// return the initialised context
@@ -28,6 +43,7 @@ func DbConnInit() (*gorm.DB, context.Context) {
 	ctx := context.Background()
 
 	db.AutoMigrate(&Language{})
+	db.AutoMigrate(&Vocabulary{})
 
 	return db, ctx
 }
@@ -37,4 +53,9 @@ func GetLangs(db *gorm.DB, ctx context.Context) ([]Language, error) {
 
 	langs, err := gorm.G[Language](db).Find(ctx)
 	return langs, err
+}
+
+func GetVocabsByLang(langId uint, db *gorm.DB, ctx context.Context) ([]Vocabulary, error) {
+	vocabs, err := gorm.G[Vocabulary](db).Where("lang_id = ?", langId).Find(ctx)
+	return vocabs, err
 }
